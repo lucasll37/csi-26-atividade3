@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editor de Árvore DOM</title>
     <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <style>
+        .selected {
+            background-color: rgb(138, 224, 164);
+            color: blue;
+        }
+    </style>
 </head>
 <body>
-
+    <h1>Editor de Árvore DOM</h1>
+    <br>
     <div class="domTree">
         <div class="item">A</div>
         <div class="item">B
@@ -15,50 +22,17 @@
             <div class="item">D</div>
         </div>
         <div class="item">E</div>
+        <div class="item">F</div>
+        <div class="item">G
+            <div class="item">H</div>
+        </div>
     </div>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script>
-    $(document).ready(function() {
-        let selectedElement = null;
-
-        $('#domTree').on('click', 'div', function(event) {
-            event.stopPropagation();
-
-            // Remover a classe "selected" de qualquer elemento previamente selecionado
-            if (selectedElement) {
-                $(selectedElement).removeClass('selected');
-            }
-
-            // Adicionar a classe "selected" ao elemento clicado
-            selectedElement = this;
-            $(selectedElement).addClass('selected');
-        });
-
-        // O usuário pode remover o elemento selecionado
-        $(document).keyup(function(event) {
-            if (selectedElement) {
-                switch (event.key) {
-                    case 'Delete':
-                        $(selectedElement).remove();
-                        selectedElement = null;
-                        break;
-                    case 'Insert':
-                        // Exemplo: insere um novo <div> como filho do elemento selecionado
-                        $(selectedElement).append('<div class="item">Novo Elemento</div>');
-                        break;
-                    case 'Enter':
-                        // Exemplo: muda o texto do elemento selecionado
-                        let newText = prompt("Digite o novo texto:", $(selectedElement).text());
-                        if (newText !== null) {
-                            $(selectedElement).text(newText);
-                        }
-                        break;
-                }
-            }
-        });
-    });
-</script>
-
+    <div class="interfaceContent">
+        <button id="removeBtn">Remover elemento selecionado</button>
+        <button id="addBtn">Adicionar filho ao elemento selecionado</button>
+        <input  type="text" id="newElemContent" placeholder="Digite novo rótulo">
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
 </body>
 </html>

@@ -1,137 +1,82 @@
-let mouseX = 0;
-let mouseY = 0;
-let speed = 5;
-let closeDistance = 20;
-let fire = false;
-let catched = false;
-const canvas = document.getElementsByTagName('canvas')[0];
-const ctx = canvas.getContext('2d');
+$(document).ready(function () {
+    let selectedElement = null;
 
-let hold_x;
-let hold_y;
+    $('.domTree').on('click', 'div', function (event) {
+        if (selectedElement) {
+            $(selectedElement).removeClass('selected');
+        }
+        selectedElement = this;
+        $(selectedElement).addClass('selected');
+        event.stopPropagation();
 
-const audioPlane = document.getElementById('plane');
-const audioBomb = document.getElementById('bomb');
-const audioVouCair = document.getElementById('vouCair');
-const audioEmg = document.getElementById('emg');
+    });
 
-
-
-audioPlane.addEventListener('ended', () => {
-    audioPlane.play();
-});
-
-audioPlane.onload = () => audioPlane.play;
-setTimeout(() => audioPlane.play(), 1000);
-
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    hold_x = canvas.width/2 - 75;
-    hold_y = canvas.height - 90;
-}
-
-window.addEventListener('resize', resizeCanvas);
-
-resizeCanvas();
-const plane = new Image();
-const missile = new Image();
-
-plane.src = 'assets/plane.png';
-missile.src = 'assets/missile-cold.png';
-
-
-function drawPlane() {
-    if(!catched){
-        ctx.drawImage(plane, mouseX - 75, mouseY - (50), 150, 100);
-    }
-    else {
-        ctx.drawImage(plane, hold_x - 75, hold_y - 50, 150, 100);
-        if(hold_y < canvas.height + 100) hold_y += 2;
-        else {
-            catched = false;
-            fire = false;
-            missile.src = 'assets/missile-cold.png';
-            plane.src = 'assets/plane.png';
-            resizeCanvas()
-            audioPlane.play();    
+    $('body').on('click', '.domTree', function (event) {
+        if (selectedElement) {
+            $(selectedElement).removeClass('selected');
         }
 
-    }
-}
+        selectedElement = null;
+        event.stopPropagation();
 
-function drawMissile() {
-    delta = Math.atan((mouseX - hold_x)/(hold_y - mouseY));
-    const angleInDegrees = -90;
-    var angleInRadians = angleInDegrees * (Math.PI / 180) + delta;
+    });
 
+    $('#removeBtn').on('click', function () {
+        if (selectedElement) {
+            $(selectedElement).remove();
+            selectedElement = null;
+        } else {
+            alert('Selecione um elemento para remover!');
+        }
+    });
 
-    if(hold_y - mouseY < 0) angleInRadians += -Math.PI;
-
-    if(fire) {
-        if(hold_y - mouseY < 0) {
-            hold_x -= speed * Math.sin(delta);
-            hold_y += speed * Math.cos(delta);
+    // 2) Adicionar elemento filho
+    $('#addBtn').on('click', function () {
+        const newElemContent = $('#newElemContent').val();
+        if (selectedElement && newElemContent) {
+            const newElem = $('<div class="item"></div>').text(newElemContent);
+            $(selectedElement).append(newElem);
+            $('#newElemContent').val('');
+        }
+        else if(newElemContent) {
+            const newElem = $('<div class="item"></div>').text(newElemContent);
+            $('.domTree').append(newElem);
+            $('#newElemContent').val('');
         }
         else {
-            hold_x += speed * Math.sin(delta);
-            hold_y -= speed * Math.cos(delta);
+            alert('Selecione um elemento e/ou preencha o conteúdo para o novo elemento!');
         }
-        if(hold_x > canvas.width || hold_x < 0 || hold_y > canvas.height || hold_y < 0) {
-            hold_x = canvas.width/2 - 75;
-            hold_y = canvas.height - 70;
-            fire = false;
-        }
-    }
+    });
 
-    ctx.save();
-    ctx.translate(hold_x, hold_y);
-    ctx.rotate(angleInRadians);
-    ctx.drawImage(missile, -75, -50, 150, 100);
-    ctx.restore();
-}
-
-plane.addEventListener('load', () => drawPlane(plane));
-missile.addEventListener('load', () => drawMissile(missile));
-
-canvas.addEventListener("mousemove", function(event) {
-    mouseX = event.clientX - canvas.offsetLeft;
-    mouseY = event.clientY - canvas.offsetTop; 
 });
 
+// $(document).ready(function() {
+//     let selectedElement = null;
 
-function update() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#ccdcf4';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    drawPlane(plane);
-    if(!fire || !catched) {
-        drawMissile(missile);
-    }
+//     $('.domTree').on('click', '*', function(event) {
+//         $('.selected').removeClass('selected');
+//         $(this).addClass('selected');
+//         selectedElement = $(this);
+//         event.stopPropagation();
+//     });
 
-    if(fire && !catched) {
-        if(Math.abs(hold_x - mouseX) < closeDistance && Math.abs(hold_y - mouseY) < closeDistance) {
-            catched = true;
-            plane.src = 'assets/plane-crash.png';
-            audioEmg.pause();
-            audioBomb.play();
-            setTimeout(() => audioVouCair.play(), 1000);
-
-        }
-    }
-
-    requestAnimationFrame(update);
-};
-
-requestAnimationFrame(update);
-
-
-canvas.addEventListener("mousedown", (event) => {
-    if(!fire) {
-        missile.src = 'assets/missile-hot.png';
-        audioPlane.pause();
-    }
-    fire = true
-    audioEmg.play();
-});
-
+//     $(document).keyup(function(event) {
+//         if (selectedElement) {
+//             switch (event.key) {
+//                 case 'Delete':
+//                     selectedElement.remove();
+//                     selectedElement = null;
+//                     break;
+//                 case 'Insert':
+//                     selectedElement.append('<div class="item">Novo Elemento</div>');
+//                     break;
+//                 case 'Enter':
+//                     let newText = prompt("Digite o novo texto:", selectedElement.text());
+//                     if (newText !== null) {
+//                         selectedElement.text(newText);
+//                     }
+//                     break;
+//             }
+//         }
+//     });
+// });

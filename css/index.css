@@ -3,9 +3,8 @@
     padding: 0;
     border: 0;
     box-sizing: border-box;
-    border: 2px red solid;
     font-family: Arial, Helvetica, sans-serif;
-    background: rgb(149, 188, 217);
+    /* border: 5px solid rgb(94, 23, 226); */
 
 }
 
@@ -16,6 +15,8 @@ body {
     justify-content: center;
     font-size: 32px;
     height: 100vh;
+    background: rgb(149, 188, 217);
+
 }
 
 .domTree {
@@ -25,30 +26,73 @@ body {
     min-height: 30rem;
     padding: 1rem;
     border-radius: 16px;
-    background: rgb(200, 121, 195);
+    background: rgb(117, 89, 219);
     box-shadow: 0 10px 10px 0 rgba(0, 0, 0);
 }
 
-.domTree > :nth-child(even) {   
-    background-color: red;
-}
-
-.selected {
-    background-color: yellow;
-}
-
 .item {
-    /* margin: 0 1rem; */
-    margin: 2px;
+    border: 1px dashed rgb(202, 51, 114);
+    margin: 4px;
     -webkit-margin-collapse: collapse;
     border-radius: 8px;
     font-size: 0.75em;
     min-width: 10rem;
     min-height: 3rem;
     padding: 0.5rem;
-    background: blue;
+    background: rgb(47, 135, 146);
+    color: rgb(119, 219, 25);
 }
 
 .item:hover:not(.selected) {
-    background: rgb(235, 225, 225);
+    background: rgb(160, 125, 226);
+}
+
+.interfaceContent * {
+    box-shadow: 0 10px 10px 0 rgba(0, 0, 0);
+    border-radius: 8px;
+    height: 3rem;
+    background: rgb(117, 89, 219);
+    color: rgb(119, 219, 25);
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.interfaceContent *:hover {
+    background: rgb(160, 125, 226);
+}
+
+.interfaceContent {
+    margin-top: 5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    
+}
+
+#removeBtn {
+    display: inline-block;
+    width: 12rem;
+
+}
+
+#addBtn {
+    display: inline-block;
+    width: 12rem;
+
+}
+
+#newElemContent {
+    display: inline-block;
+    width: 15rem;
+    text-align: center;
+    font-weight: bold;
+    background-color: white;
+
+}
+
+#newElemContent::placeholder {
+    color: rgb(166, 190, 144);
+    font-weight: bold;
 }
